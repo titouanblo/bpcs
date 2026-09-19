@@ -1,7 +1,6 @@
 from PIL import Image
 from matplotlib import pyplot as plt
 
-import scipy.misc
 from classes.bit_layer import BitLayer
 from classes.image.host_image_bw import HostImageBW
 from classes.image.image_protocol import HostImage

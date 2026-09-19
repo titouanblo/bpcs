@@ -48,8 +48,9 @@ class Encoder:
         self.secret_data = secret_data
 
         self.block_to_hide = self.secret_data.number_of_blocks + 1 + self.nb_block_for_file_name
-        if self.host_image.writable_blocks_count < self.block_to_hide:
-            raise Exception(f"Not enough storage in the host image, available : {self.host_image.writable_blocks_count}, needed : {self.secret_data.number_of_blocks + 2}")
+        available_blocks = sum(layer.writable_blocks_count for layer in self.host_image.writing_layers(bellow=3))  # Only the layers encode() writes to.
+        if available_blocks < self.block_to_hide:
+            raise Exception(f"Not enough storage in the host image, available : {available_blocks}, needed : {self.block_to_hide}")
 
     def encode(self):
         data_written_counter = 0

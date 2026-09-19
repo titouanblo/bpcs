@@ -1,3 +1,5 @@
+import os
+
 from PIL import Image
 
 from classes.bitplane.BitPlane64 import Bitplane64
@@ -32,7 +34,7 @@ class Decoder:
                     # Block was conjugated.
                     block = block.conjugate()
                 if meta_decoded_counter < 5:
-                    file_name_bin += bin((block.bitplane >> 1))[2:]
+                    file_name_bin += bin((block.bitplane >> 1))[2:].zfill(63)
                 elif meta_decoded_counter == 5:
                     data_length = block.bitplane >> 1
                     print(data_length)
@@ -75,6 +77,7 @@ class Decoder:
 
         whole_data = whole_data[:self.data_length]
         print("out : ", whole_data)
-        newfile = open(f'aoutput/{file_name}', 'wb')
+        os.makedirs('decoded', exist_ok=True)
+        newfile = open(f'decoded/{file_name}', 'wb')
         print(int(whole_data, 2).to_bytes(length=int(self.data_length/8 + 1), byteorder="big", signed=False).strip(b'\x00'))
         newfile.write(int(whole_data, 2).to_bytes(length=int(self.data_length/8 + 1), byteorder="big", signed=False).strip(b'\x00'))
